@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous"></script>
+    <title>AboutApp</title>
+</head>
+<body>
+<header>
+    <div id="logo" class="my-auto">
+        <h1><a href="/users/table">DatabaseApp</a></h1>
+    </div>
+
+    <nav>
+        <ul>
+            <li class="mx-5 h4"><a href="/users/table">User database</a></li>
+            <li class="mx-5 h4"><a href="/users/aboutApp">About app</a></li>
+        </ul>
+    </nav>
+</header>
+<article>
+    <p>
+        This web application was developed for learning and showcasing my skills in web development.
+    </p>
+    <p>
+        It functions as a basic database management system, enabling the display, listing, sorting, searching, adding,
+        and deleting of users. Each user has attributes such as ID, Name, Surname, Gender, Date of Birth, Email, Phone
+        Number, and Type of Insurance. Users can be displayed and sorted by table columns, with pagination available
+        below the table. The search feature allows you to find users individually by their ID, Name, or Surname. When
+        searching by Name or Surname, the ID field must be set to 0, otherwise the search will always prioritize the
+        ID. Deleting a user is as simple as entering their ID in the "Remove User" form. New users can be added via the
+        "Add User" form, with validation performed both on the client and server sides.
+    </p>
+    <p>
+        This application is built using MySQL for database management and developed in Java using the Spring Boot
+        framework with an MVC architecture. JavaScript and CSS are used for formatting and enhancing the user interface.
+    </p>
+</article>
+</body>
+<style>
+    header {
+        height: 100px;
+        width: 100%;
+        background: #00386B;
+        color: white;
+    }
+
+    header {
+        display: flex;
+        justify-content: space-evenly;
+    }
+
+    article {
+        margin: 0 auto;
+        max-width: 960px;
+        padding: 1.25rem 1.25rem;
+    }
+
+    p {
+        font-size: 1.5rem;
+        margin-bottom: 1.25rem;
+    }
+
+    nav > ul {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        list-style: none;
+    }
+
+    nav > ul > li > a, h1 > a {
+        color: white;
+        text-decoration: none;
+    }
+
+    nav > ul > li > a:hover {
+        border-bottom: 2px solid #EF6534;
+    }
+</style>
+</html>

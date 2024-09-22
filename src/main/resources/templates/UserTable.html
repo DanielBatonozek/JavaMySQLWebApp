@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous"></script>
+    <title>UserDatabase</title>
+</head>
+<body>
+
+<header>
+    <div id="logo" class="my-auto">
+        <h1><a href="/users/table">DatabaseApp</a></h1>
+    </div>
+
+    <nav>
+        <ul>
+            <li class="mx-5 h4"><a href="/users/table">User database</a></li>
+            <li class="mx-5 h4"><a href="/users/aboutApp">About app</a></li>
+        </ul>
+    </nav>
+</header>
+
+<article>
+    <div class="container-fluid" id="userTableContainer">
+        <div class="table-responsive">
+            <table class="table table-primary table-striped">
+                <thead>
+                <tr>
+                    <th><a th:href="@{/users/table?sort=id}">Id</a></th>
+                    <th><a th:href="@{/users/table(sort=${'name'})}">Name</a></th>
+                    <th><a th:href="@{/users/table?sort=surname}">Surname</a></th>
+                    <th><a th:href="@{/users/table?sort=gender}">Gender</a></th>
+                    <th><a th:href="@{/users/table?sort=dateOfBirth}">Date of birth</a></th>
+                    <th><a th:href="@{/users/table?sort=email}">Email</a></th>
+                    <th><a th:href="@{/users/table?sort=phoneNumber}">Phone number</a></th>
+                    <th><a th:href="@{/users/table?sort=typeOfInsurance}">Type of insurance</a></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${userTableDTO.getDisplayedUsers()}">
+                    <td th:text="${user.getId()}"></td>
+                    <td th:text="${user.getName()}"></td>
+                    <td th:text="${user.getSurname()}"></td>
+                    <td th:text="${user.getGender()}"></td>
+                    <td th:text="${user.getDateOfBirth()}"></td>
+                    <td th:text="${user.getEmail()}"></td>
+                    <td th:text="${user.getPhoneNumber()}"></td>
+                    <td th:text="${user.getTypeOfInsurance()}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <ul class="pagination" id="userTablePagination">
+    </ul>
+
+    <div class="container-fluid" id="findRemoveUserContainer">
+        <div class="row g-4">
+            <div class="col-8">
+                <form action="/users/table" method="get" id="findUserForm" class="rounded">
+                    <p class="h3">Find User</p>
+                    <div class="row">
+                        <div class="col-4">
+                            <label for="findUserId" class="form-label">Id</label>
+                            <input type="number" id="findUserId" class="form-control" min="0" value="0"
+                                   th:field="${userTableDTO.findUserId}">
+                        </div>
+                        <div class="col-4">
+                            <label for="findUserName" class="form-label">Name</label>
+                            <input type="text" id="findUserName" class="form-control" value=""
+                                   th:field="${userTableDTO.findUserName}">
+                        </div>
+                        <div class="col-4">
+                            <label for="findUserSurname" class="form-label">Surname</label>
+                            <input type="text" id="findUserSurname" class="form-control" value=""
+                                   th:field="${userTableDTO.findUserSurname}">
+                        </div>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="submit" value="true" name="findUserMod" class="btn">Submit</button>
+                        <button type="submit" value="true" name="exitFindUserMod" class="btn">Back</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-4">
+                <form action="/users/remove-user" method="post" id="removeUserForm" class="rounded px-3">
+                    <p class="h3">Remove user</p>
+                    <label for="id" class="form-label">id</label>
+                    <input type="number" id="id" name="id" class="form-control" th:field="${userDTO.id}">
+                    <button type="submit" class="btn">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid" id="addUserContainer">
+        <form action="/users/add-user" method="post" id="addUserForm" class=" rounded needs-validation" novalidate>
+            <p class="h3">Add user</p>
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="name" class="form-label">name</label>
+                    <input type="text" id="name" name="name" class="form-control" th:field="${userDTO.name}" required>
+                    <div class="valid-feedback">Looks good!</div>
+                    <div class="invalid-feedback" id="invalidName">Looks not so good!</div>
+                </div>
+                <div class="col-md-3">
+                    <label for="surname" class="form-label">Surname</label>
+                    <input type="text" id="surname" name="surname" class="form-control" th:field="${userDTO.surname}"
+                           required>
+                    <div class="valid-feedback">Looks good!</div>
+                    <div class="invalid-feedback" id="invalidSurname">Looks not so good!</div>
+                </div>
+                <div class="col-md-3">
+                    <label for="gender" class="form-label">Gender</label>
+                    <select id="gender" name="gender" class="form-select" th:field="${userDTO.gender}" required>
+                        <option selected value="">Choose...</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                    <div class="valid-feedback">Looks good!</div>
+                    <div class="invalid-feedback">Looks not so good!</div>
+                </div>
+                <div class="col-md-3">
+                    <label for="dateOfBirth" class="form-label">Date of birth</label>
+                    <input type="date" id="dateOfBirth" name="dateOfBirth" class="form-control"
+                           th:field="${userDTO.dateOfBirth}" required>
+                    <div class="valid-feedback">Looks good!</div>
+                    <div class="invalid-feedback">Looks not so good!</div>
+                </div>
+            </div>
+
+            <div class="row" id="addUserSecRow">
+                <div class="col-md-4">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" name="email" class="form-control" th:field="${userDTO.email}"
+                           required>
+                    <div class="valid-feedback">Looks good!</div>
+                    <div class="invalid-feedback">Looks not so good!</div>
+                </div>
+                <div class="col-md-4">
+                    <label for="phoneNumber" class="form-label">Phone number</label>
+                    <input type="text" id="phoneNumber" name="phoneNumber" class="form-control"
+                           th:field="${userDTO.phoneNumber}" required>
+                    <div class="valid-feedback">Looks good!</div>
+                    <div class="invalid-feedback" id="invalidPhoneNumber">Looks not so good!</div>
+                </div>
+                <div class="col-md-4">
+                    <label for="typeOfInsurance" class="form-label">Type of insurance</label>
+                    <select id="typeOfInsurance" name="typeOfInsurance" class="form-select"
+                            th:field="${userDTO.typeOfInsurance}" required>
+                        <option selected value="">Choose...</option>
+                        <option value="Private">Private</option>
+                        <option value="Public">Public</option>
+                    </select>
+                    <div class="valid-feedback">Looks good!</div>
+                    <div class="invalid-feedback">Looks not so good!</div>
+                </div>
+            </div>
+
+            <button type="submit" id="addUserBtn" class="btn">Submit</button>
+            <div id="addUserMessageContainer">
+            </div>
+        </form>
+    </div>
+
+
+</article>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    'use strict'
+
+//Makes confirmation message whether the new user was created.
+function addUserMessage() {
+    let addUserBtn = document.getElementById("addUserBtn");
+    let addUserMessageContainer = document.getElementById("addUserMessageContainer");
+        if (!addUserBtn) {
+    alert("Element with ID 'addUserBtn' not found.");
+}
+    let userWasAddedMessageElement = document.createElement("p");
+    if (/*[[${userWasAdded}]]*/) {
+        userWasAddedMessageElement.setAttribute("style", "color: green;");
+        userWasAddedMessageElement.textContent = "User was created";
+    } else {
+        userWasAddedMessageElement.setAttribute("style", "color: red;");
+        userWasAddedMessageElement.textContent = "User was not created";
+    }
+    addUserMessageContainer.appendChild(userWasAddedMessageElement);
+}
+
+/*  Validate whether the given value is a letter.
+    Return true - is letter, false - is not letter.
+*/
+function isLetter(str) {
+return str.length === 1 && str.match(/^[\p{L}]$/u) && str !== ' ';
+}
+
+/*  Validate whether the given value is a letter.
+    Return true - is digit, false - is not digit.
+*/
+function isDigit(digit) {
+    return digit.length === 1 && digit.match(/[0-9]/);
+}
+
+/* Invalidate form input and sets a given message.
+   return false.
+*/
+function invalidateForm(formInput, invalidMessage, text) {
+    invalidMessage.textContent = text;
+    formInput.classList.add("is-invalid");
+    return false;
+}
+
+/*  Validate whether the given value is not null, has 0 to 64 letters, is composed form letters.
+    In case the value is not valid, makes the form invalid, sets a relevant message and prevent form from sending.
+    Returns true - valid, false - invalid
+*/
+function isNameValid(name) {
+    name.value = name.value.trim();
+    name.classList.remove("is-valid");
+    let invalidNameMessage = name.parentElement.getElementsByClassName("invalid-feedback")[0];
+    if (name.value.length > 64) {
+        return invalidateForm(name, invalidNameMessage, "Name must not contain more than 64 symbols");
+    }
+    if (name.value == null || name.value.length === 0) {
+        return invalidateForm(name, invalidNameMessage, "Fill in your name");
+    }
+    for (let i = 0; i < name.value.length; i++) {
+        if (!isLetter(name.value.charAt(i))) {
+            return invalidateForm(name, invalidNameMessage, "Name must not contain numbers, spaces and special characters");
+        }
+    }
+    name.classList.remove("is-invalid");
+    name.classList.add("is-valid");
+    return true;
+}
+
+
+/*  Validate whether the given value has 5 to 16 letters, is composed form digits, can contain "+" prefix.
+    In case the value is not valid, makes the form invalid, sets a relevant message and prevent form from sending.
+    Returns true - valid, false - invalid
+*/
+function isPhoneNumberValid(phoneNumber) {
+    phoneNumber.value = phoneNumber.value.trim();
+    phoneNumber.classList.remove("is-valid");
+    let invalidPhoneNumberMessage = phoneNumber.parentElement.getElementsByClassName("invalid-feedback")[0];
+    if (phoneNumber.value === null || phoneNumber.value.length === 0) {
+        return invalidateForm(phoneNumber, invalidPhoneNumberMessage, "Fill in your phone number");
+    }
+    if (phoneNumber.value.length < 5 || phoneNumber.value.length > 16) {
+        return invalidateForm(phoneNumber, invalidPhoneNumberMessage, "Phone number must have 5 number to 16 digits");
+    }
+    for (let i = 1; i < phoneNumber.value.length; i++) {
+        if (!isDigit(phoneNumber.value.charAt(i)) || (!phoneNumber.value.startsWith("+") && !isDigit(phoneNumber.value.charAt(0)))) {
+            return invalidateForm(phoneNumber, invalidPhoneNumberMessage, 'Phone number can contain only digits and prefix "+"');
+        }
+    }
+    phoneNumber.classList.remove("is-invalid");
+    phoneNumber.classList.add("is-valid");
+    return true;
+}
+
+/* Validate whether the email contains "@" symbol, has less than 64 symbols.
+   Can contain only letters, numbers and dots.
+   Local and domain parts are not empty.
+   Local and domain parts of email can not start or end with a dot.
+   Domain part has to contain a dot.
+   return true - valid email, false - invalid email.
+*/
+function isEmailValid(email) {
+    email.value = email.value.trim();
+    email.classList.remove("is-valid");
+    let invalidEmailMessage = email.parentElement.getElementsByClassName("invalid-feedback")[0];
+    if (email.value === null || email.value.length === 0) {
+        return invalidateForm(email, invalidEmailMessage, "Fill in your email");
+    }
+    if (!email.value.includes("@") || email.value.match(/@/g).length > 1) {
+        return invalidateForm(email, invalidEmailMessage, 'Email must include one "@" symbol');
+    }
+    let localPart = email.value.substring(0, email.value.indexOf("@"));
+    let domain = email.value.substring(email.value.indexOf("@") + 1);
+    let localDomain = localPart + domain;
+    if (localPart.length === 0 || domain.length === 0) {
+        return invalidateForm(email, invalidEmailMessage, "Fill in local and domain part of email");
+    }
+    if (localPart.startsWith(".") || localPart.endsWith(".") || domain.startsWith(".") || domain.endsWith(".")) {
+        return invalidateForm(email, invalidEmailMessage, "Local and domain part can not start or end with a dot");
+    }
+    for (let i = 0; i < (localDomain).length; i++) {
+        if (!isLetter(localDomain.charAt(i)) && !isDigit(localDomain.charAt(i)) && localDomain.charAt(i) !== ".") {
+            return invalidateForm(email, invalidEmailMessage, "Email can only include letters, digits and dots");
+        }
+    }
+    if (localDomain.includes("..")) {
+        return invalidateForm(email, invalidEmailMessage, "Email can not have two or more dots next to each other");
+    }
+    if (!domain.includes(".")) {
+        return invalidateForm(email, invalidEmailMessage, "Domain must include a dot");
+    }
+    if (email.value.length > 64) {
+        return invalidateForm(email, invalidEmailMessage, "Email must not have more than 64 symbols");
+    }
+    email.classList.remove("is-invalid");
+    email.classList.add("is-valid");
+
+    return true;
+}
+
+/*  Validate whether the gender is selected as "male" or "female".
+    Returns true - valid, false - invalid
+*/
+function isGenderValid(gender) {
+    gender.classList.remove("is-valid");
+    let invalidGenderMessage = gender.parentElement.getElementsByClassName("invalid-feedback")[0];
+    if (gender.value !== "Male" && gender.value !== "Female") {
+        return invalidateForm(gender, invalidGenderMessage, "Select your gender");
+    }
+    gender.classList.remove("is-invalid");
+    gender.classList.add("is-valid");
+    return true;
+}
+
+/*  Validate whether the date of birth is selected and is earlier than the current date.
+    Returns true - valid, false - invalid
+*/
+function isDateOfBirthValid(dateOfBirth) {
+    dateOfBirth.classList.remove("is-valid");
+    let invalidBirthMessage = dateOfBirth.parentElement.getElementsByClassName("invalid-feedback")[0];
+    let today = new Date();
+    let birthDay = new Date(dateOfBirth.value);
+    today.setHours(0,0,0,0);
+    if (birthDay > today || dateOfBirth.value ==="") {
+        return invalidateForm(dateOfBirth, invalidBirthMessage, "Invalid date");
+    }
+    dateOfBirth.classList.remove("is-invalid");
+    dateOfBirth.classList.add("is-valid");
+    return true;
+}
+
+/*  Validate whether the type of insurance is selected as a "private" or "public".
+    Returns true - valid, false - invalid
+*/
+function isTypeOfInsuranceValid(typeOfInsurance) {
+    typeOfInsurance.classList.remove("is-valid");
+    let invalidInsuranceMessage = typeOfInsurance.parentElement.getElementsByClassName("invalid-feedback")[0];
+    let listOfInsurance = ["Private", "Public"];
+    if (!listOfInsurance.includes(typeOfInsurance.value)) {
+        return invalidateForm(typeOfInsurance,invalidInsuranceMessage, "Select valid insurance");
+    }
+    typeOfInsurance.classList.remove("is-invalid");
+    typeOfInsurance.classList.add("is-valid");
+    return true;
+}
+
+/* Validate all user form inputs using validation methods.
+*/
+function addUser(form, event) {
+    let name = document.getElementById("name");
+    let surname = document.getElementById("surname");
+    let phoneNumber = document.getElementById("phoneNumber");
+    let email = document.getElementById("email");
+    let gender = document.getElementById("gender");
+    let dateOfBirth = document.getElementById("dateOfBirth");
+    let typeOfInsurance = document.getElementById("typeOfInsurance");
+    form.classList.remove('was-validated');
+    if (!isNameValid(name) ||
+    !isNameValid(surname) ||
+    !isGenderValid(gender) ||
+    !isDateOfBirthValid(dateOfBirth) ||
+    !isEmailValid(email) ||
+    !isPhoneNumberValid(phoneNumber) ||
+    !isTypeOfInsuranceValid(typeOfInsurance))
+    {
+        event.preventDefault();
+        event.stopPropagation();
+    } else {
+        form.classList.add('was-validated');
+    }
+}
+
+/* Creates individual pagination elements and determines if they should be active or disabled.
+*/
+function createPaginationElement(paginationList, symbol, link, active, disabled) {
+    let a = document.createElement("a");
+    a.classList.add("page-link");
+    a.innerHTML = symbol;
+    if (link !== null && link !== undefined && link !== "") {
+        a.href = link;
+    }
+
+    let li = document.createElement("li");
+    li.classList.add("page-item");
+    if (active) {
+        li.classList.add("active");
+    }
+    if (disabled) {
+        li.classList.add("disabled");
+    }
+    li.appendChild(a);
+    paginationList.appendChild(li);
+}
+
+/* Creates pagination panel
+*/
+function pagination(currentPage, totalPage) {
+    let paginationList = document.getElementById("userTablePagination");
+    if (currentPage === 1) {
+        createPaginationElement(paginationList, "&laquo;", "/users/table?page="+ 1, false, true);
+        createPaginationElement(paginationList,"&lt", "/users/table?previousPage=true", false, true);
+    } else {
+        createPaginationElement(paginationList, "&laquo;", "/users/table?page="+ 1, false, false);
+        createPaginationElement(paginationList,"&lt", "/users/table?previousPage=true", false, false);
+    }
+    if (currentPage > 3) {
+        createPaginationElement(paginationList, "...", "", false, true);
+    }
+    for (let i = Math.max(1, currentPage - 2); i <= Math.min(currentPage + 2, totalPage); i++) {
+        if (i === currentPage) {
+            createPaginationElement(paginationList, i, "/users/table?page="+ i, true, false);
+        } else {
+            createPaginationElement(paginationList, i, "/users/table?page="+ i, false, false);
+        }
+    }
+    if (currentPage + 2 < totalPage) {
+        createPaginationElement(paginationList, "...", "", false, true);
+    }
+    if (currentPage === totalPage) {
+        createPaginationElement(paginationList,"&gt", "/users/table?nextPage=true", false, true);
+        createPaginationElement(paginationList, "&raquo;", "/users/table?page="+ totalPage, false, true);
+    } else {
+        createPaginationElement(paginationList,"&gt", "/users/table?nextPage=true", false, false);
+        createPaginationElement(paginationList, "&raquo;", "/users/table?page="+ totalPage, false, false);
+    }
+}
+
+/* If empty, sets the default value in the find user form to "0".;
+*/
+function findUserDefaultId() {
+    let id = document.getElementById("findUserId");
+    if (id.value === "") {
+        id.value = 0;
+    }
+    for (let i = 0 ; i < id.value.length; i++) {
+        if (!isDigit(id.value.charAt(i)))
+            id.value = 0;
+    }
+}
+
+window.onload = function () {
+    pagination(/*[[${userTableDTO.getPage() + 1}]]*/, /*[[${userTableDTO.getTotalPage()}]]*/);
+
+    // Creates a confirmation message when a new user is added to the database.
+    if (/*[[${processAddUserMessage}]]*/) {
+        addUserMessage();
+    }
+
+    // If empty, sets the default value in the find user form to "0".
+    let findUSerForm = document.getElementById("findUserForm");
+    findUSerForm.addEventListener("submit", function() {
+        findUserDefaultId();
+    });
+
+    // Validate add user form inputs.
+    let form = document.getElementById("addUserForm")
+    form.addEventListener('submit', function (event) {
+        addUser(form, event);
+    });
+}
+    /*]]>*/
+</script>
+</body>
+<style>
+    header {
+        height: 100px;
+        width: 100%;
+        background: #00386B;
+        color: white;
+    }
+
+    #findUserForm, #addUserForm, #removeUserForm {
+        padding:  1rem 1.25rem;
+        color: white;
+        background-color: #00386B;
+    }
+
+    #userTablePagination {
+        margin-left: 1.25rem;
+    }
+
+    .container-fluid {
+        width: auto;
+        margin: 1.25rem 1.25rem 0 1.25rem;
+    }
+
+    #addUserSecRow {
+        margin-top: 0.5rem;
+    }
+
+    .btn {
+        margin-top: 0.75rem;
+        background-color: #1f9e13;
+        color: white;
+        border: none;
+    }
+
+    .btn:hover,
+    .btn:active:focus {
+        background-color: #16700d;
+        border: none;
+    }
+
+    header {
+        display: flex;
+        justify-content: space-evenly;
+    }
+
+    nav > ul {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        list-style: none;
+    }
+
+    nav > ul > li > a, h1 > a {
+        color: white;
+        text-decoration: none;
+    }
+
+    nav > ul > li > a:hover {
+        border-bottom: 2px solid #EF6534;
+    }
+</style>
+</html>
