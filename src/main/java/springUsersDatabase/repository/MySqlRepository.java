@@ -11,12 +11,6 @@ import java.util.List;
 
 public interface MySqlRepository extends JpaRepository<User, Integer> {
 
-    @Query("SELECT u FROM User u ORDER BY u.id DESC")
-    Page<User> findAllUsersOrderByIdDesc(Pageable pageable);
-
-    @Query("SELECT u FROM User u WHERE u.gender = 'female'")
-    Page<User> findAllFemaleUsers(Pageable pageable);
-
     @Query("SELECT u FROM User u WHERE" +
             "(:userName = '' OR  u.name = :userName ) AND" +
             "(:userSurname = '' OR  u.surname = :userSurname) AND" +
